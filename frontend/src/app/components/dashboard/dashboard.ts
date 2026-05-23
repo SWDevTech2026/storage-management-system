@@ -28,7 +28,7 @@ export class DashboardComponent implements OnInit {
 
   isAdmin = false;
   showRegisterModal = false;
-  newUser = { username: '', password: '', role: 'user' };
+  newUser = { username: '', email: '', password: '', role: 'user' };
   registrationMessage = '';
   registrationSuccess = false;
 
@@ -81,7 +81,7 @@ export class DashboardComponent implements OnInit {
   closeRegisterModal(): void {
     this.showRegisterModal = false;
     // Reset form fields
-    this.newUser = { username: '', password: '', role: 'user' };
+    this.newUser = { username: '', email: '', password: '', role: 'user' };
     this.cdr.detectChanges();
   }
 
@@ -98,7 +98,7 @@ export class DashboardComponent implements OnInit {
         this.registrationSuccess = true;
         this.registrationMessage = `Account "${this.newUser.username}" created successfully!`;
         // Clear input fields on success
-        this.newUser = { username: '', password: '', role: 'user' };
+        this.newUser = { username: '', email: '', password: '', role: 'user' };
         this.cdr.detectChanges();
       },
       error: (err) => {
