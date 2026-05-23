@@ -1,9 +1,9 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-3 mb-4">
-  <span class="navbar-brand mb-0 h1">📦 Storage Cockpit</span>
+  <span class="navbar-brand mb-0 h1">Inventory Manager</span>
 
   <div class="ms-auto d-flex align-items-center">
     <button *ngIf="isAdmin" class="btn btn-outline-info btn-sm me-3" (click)="openRegisterModal()">
-      <i class="bi bi-person-plus-fill me-1"></i> Register User Account
+      <i class="bi bi-person-plus-fill me-1"></i> Register
     </button>
 
     <button class="btn btn-danger btn-sm" (click)="onLogout()">Logout</button>
@@ -15,7 +15,7 @@
     <!-- Left Column: Category Side Controls -->
     <div class="col-xl-4 col-lg-5">
       <div class="card p-3 mb-4">
-        <h5 class="card-title text-secondary border-bottom pb-2">Add New Group Category</h5>
+        <h5 class="card-title text-secondary border-bottom pb-2">Add New Category</h5>
         <div class="input-group">
           <input type="text" [(ngModel)]="newCategoryName" class="form-control" placeholder="Category Name">
           <button class="btn btn-success" (click)="addCategory()"><i class="bi bi-plus-lg"></i></button>
@@ -23,7 +23,7 @@
       </div>
 
       <div class="card p-3">
-        <h5 class="card-title text-secondary border-bottom pb-2">Configured Categories</h5>
+        <h5 class="card-title text-secondary border-bottom pb-2">Categories</h5>
         <ul class="list-group list-group-flush max-vh-50 overflow-auto">
           <li *ngFor="let cat of categories"
             class="list-group-item d-flex justify-content-between align-items-center px-1">
@@ -51,8 +51,8 @@
     <!-- Right Column: Central Stock Management Grid -->
     <div class="col-xl-8 col-lg-7">
       <div class="card p-3 mb-4 bg-light">
-        <h5 class="card-title border-bottom pb-2"><i class="bi bi-file-earmark-plus-fill me-2 text-primary"></i>Register
-          New Stock Asset Item</h5>
+        <h5 class="card-title border-bottom pb-2"><i class="bi bi-file-earmark-plus-fill me-2 text-primary"></i>Add
+          New Item</h5>
         <form (ngSubmit)="addItem()" class="row g-2">
           <div class="col-md-5">
             <input type="text" [(ngModel)]="newItem.item_name" name="item_name" class="form-control"
@@ -75,15 +75,15 @@
       </div>
 
       <div class="card p-3">
-        <h5 class="card-title border-bottom pb-2">Live Inventory Tracking Records</h5>
+        <h5 class="card-title border-bottom pb-2">Inventory Records</h5>
         <div class="table-responsive">
           <table class="table table-hover align-middle">
             <thead class="table-light">
               <tr>
                 <th>ID</th>
-                <th>Item Description</th>
-                <th>Category Assignment</th>
-                <th>Stock Level (Qty)</th>
+                <th>Name</th>
+                <th>Category</th>
+                <th>Quantity</th>
                 <th class="text-end">Actions</th>
               </tr>
             </thead>
@@ -155,7 +155,7 @@
     <div class="modal-content border-info shadow-lg">
 
       <div class="modal-header bg-info text-dark">
-        <h5 class="modal-title fw-bold"><i class="bi bi-shield-lock-fill me-2"></i>Provision User Profile</h5>
+        <h5 class="modal-title fw-bold"><i class="bi bi-shield-lock-fill me-2"></i>Register New User</h5>
         <button type="button" class="btn-close" (click)="closeRegisterModal()"></button>
       </div>
 
@@ -168,7 +168,7 @@
           </div>
 
           <div class="mb-3">
-            <label class="form-label small fw-bold text-muted mb-1">System Account Username</label>
+            <label class="form-label small fw-bold text-muted mb-1">Username</label>
             <div class="input-group input-group-sm">
               <span class="input-group-text"><i class="bi bi-person-badge"></i></span>
               <input type="text" [(ngModel)]="newUser.username" name="regUsername" class="form-control"
@@ -177,7 +177,16 @@
           </div>
 
           <div class="mb-3">
-            <label class="form-label small fw-bold text-muted mb-1">Account Password Access Code</label>
+            <label class="form-label small fw-bold text-muted mb-1">Email</label>
+            <div class="input-group input-group-sm">
+              <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+              <input type="text" [(ngModel)]="newUser.email" name="regEmail" class="form-control"
+                placeholder="e.g., example@gmail.com" required autocomplete="off">
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label small fw-bold text-muted mb-1">Password</label>
             <div class="input-group input-group-sm">
               <span class="input-group-text"><i class="bi bi-key-fill"></i></span>
               <input type="password" [(ngModel)]="newUser.password" name="regPassword" class="form-control"
@@ -186,10 +195,10 @@
           </div>
 
           <div class="mb-2">
-            <label class="form-label small fw-bold text-muted mb-1">System System Authorization Role Group</label>
+            <label class="form-label small fw-bold text-muted mb-1">Authorization Role</label>
             <select [(ngModel)]="newUser.role" name="regRole" class="form-select form-select-sm">
-              <option value="user">Standard Inventory Operator (User)</option>
-              <option value="admin">System Administrator (Admin)</option>
+              <option value="user">User</option>
+              <option value="admin">Admin</option>
             </select>
           </div>
 
@@ -198,7 +207,7 @@
         <div class="modal-footer bg-light py-2">
           <button type="button" class="btn btn-secondary btn-sm fw-bold" (click)="closeRegisterModal()">Cancel</button>
           <button type="submit" class="btn btn-info btn-sm text-dark fw-bold px-3">
-            <i class="bi bi-cloud-arrow-up-fill me-1"></i> Save Account
+            <i class="bi bi-cloud-arrow-up-fill me-1"></i> Create Account
           </button>
         </div>
       </form>
