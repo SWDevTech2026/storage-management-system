@@ -31,6 +31,7 @@ export class UsersService implements OnModuleInit {
       username: 'admin',
       email: 'admin@storage.com',
       password: securePassword,
+      role: 'admin',
     });
 
     await this.userRepository.save(freshAdmin);
