@@ -4,6 +4,7 @@ CREATE TABLE users (
     username VARCHAR(50) NOT NULL UNIQUE,
     email VARCHAR(100) UNIQUE,
     password VARCHAR(255) NOT NULL,
+	role VARCHAR(50) DEFAULT 'user',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -27,12 +28,13 @@ CREATE TABLE items (
     FOREIGN KEY (created_by) REFERENCES users(user_id) ON DELETE SET NULL
 );
 
-INSERT INTO users (username, email, password) 
-VALUES ('admin', 'admin@storage.com', 'admin123');
-
-ALTER TABLE users 
-ADD COLUMN role VARCHAR(50) DEFAULT 'user';
+INSERT INTO users (username, email, password, role) 
+VALUES ('admin', 'admin@storage.com', 'admin123', 'admin');
 
 UPDATE users 
-SET role = 'admin' 
+SET password = '$2b$10$O0V77bWn.469nZ0W819uO.9M6R/fRjRz2Zk1.pW5bK9qHnF/8S2mC' 
 WHERE username = 'admin';
+
+select * from users
+select * from items
+select * from categories
