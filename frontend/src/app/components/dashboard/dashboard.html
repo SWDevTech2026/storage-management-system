@@ -1,0 +1,208 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark px-3 mb-4">
+  <span class="navbar-brand mb-0 h1">📦 Storage Cockpit</span>
+
+  <div class="ms-auto d-flex align-items-center">
+    <button *ngIf="isAdmin" class="btn btn-outline-info btn-sm me-3" (click)="openRegisterModal()">
+      <i class="bi bi-person-plus-fill me-1"></i> Register User Account
+    </button>
+
+    <button class="btn btn-danger btn-sm" (click)="onLogout()">Logout</button>
+  </div>
+</nav>
+
+<div class="container-fluid px-4">
+  <div class="row g-4">
+    <!-- Left Column: Category Side Controls -->
+    <div class="col-xl-4 col-lg-5">
+      <div class="card p-3 mb-4">
+        <h5 class="card-title text-secondary border-bottom pb-2">Add New Group Category</h5>
+        <div class="input-group">
+          <input type="text" [(ngModel)]="newCategoryName" class="form-control" placeholder="Category Name">
+          <button class="btn btn-success" (click)="addCategory()"><i class="bi bi-plus-lg"></i></button>
+        </div>
+      </div>
+
+      <div class="card p-3">
+        <h5 class="card-title text-secondary border-bottom pb-2">Configured Categories</h5>
+        <ul class="list-group list-group-flush max-vh-50 overflow-auto">
+          <li *ngFor="let cat of categories"
+            class="list-group-item d-flex justify-content-between align-items-center px-1">
+
+            <span *ngIf="editingCategoryId !== cat.category_id">{{ cat.category_name }}</span>
+
+            <input *ngIf="editingCategoryId === cat.category_id" type="text" [(ngModel)]="editCategoryName"
+              class="form-control form-control-sm me-2" style="max-width: 150px;">
+
+            <div>
+              <button *ngIf="editingCategoryId !== cat.category_id" class="btn btn-link text-warning p-0 me-2"
+                (click)="startEditCategory(cat)"><i class="bi bi-pencil-square"></i></button>
+              <button *ngIf="editingCategoryId === cat.category_id" class="btn btn-link text-success p-0 me-2"
+                (click)="saveCategoryUpdate(cat.category_id)"><i class="bi bi-check-square-fill"></i></button>
+
+              <button class="btn btn-link text-danger p-0" (click)="deleteCategory(cat.category_id)"><i
+                  class="bi bi-trash3"></i></button>
+            </div>
+
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Right Column: Central Stock Management Grid -->
+    <div class="col-xl-8 col-lg-7">
+      <div class="card p-3 mb-4 bg-light">
+        <h5 class="card-title border-bottom pb-2"><i class="bi bi-file-earmark-plus-fill me-2 text-primary"></i>Register
+          New Stock Asset Item</h5>
+        <form (ngSubmit)="addItem()" class="row g-2">
+          <div class="col-md-5">
+            <input type="text" [(ngModel)]="newItem.item_name" name="item_name" class="form-control"
+              placeholder="Item Name" required>
+          </div>
+          <div class="col-md-3">
+            <select [(ngModel)]="newItem.category_id" name="category_id" class="form-select">
+              <option value="">-- No Category --</option>
+              <option *ngFor="let c of categories" [value]="c.category_id">{{ c.category_name }}</option>
+            </select>
+          </div>
+          <div class="col-md-2">
+            <input type="number" [(ngModel)]="newItem.quantity" name="quantity" class="form-control" placeholder="Qty">
+          </div>
+          <div class="col-md-2">
+            <button type="submit" class="btn btn-primary w-100"><i
+                class="bi bi-check-circle-fill me-1"></i>Save</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="card p-3">
+        <h5 class="card-title border-bottom pb-2">Live Inventory Tracking Records</h5>
+        <div class="table-responsive">
+          <table class="table table-hover align-middle">
+            <thead class="table-light">
+              <tr>
+                <th>ID</th>
+                <th>Item Description</th>
+                <th>Category Assignment</th>
+                <th>Stock Level (Qty)</th>
+                <th class="text-end">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of items">
+                <td><span class="badge bg-secondary">{{ item.item_id }}</span></td>
+
+                <td>
+                  <span *ngIf="editingItemId !== item.item_id"><strong>{{ item.item_name }}</strong></span>
+                  <input *ngIf="editingItemId === item.item_id" type="text" [(ngModel)]="editItemData.item_name"
+                    class="form-control form-control-sm">
+                </td>
+
+                <td>
+                  <span *ngIf="editingItemId !== item.item_id" class="text-muted">
+                    {{ item.category?.category_name || 'Unassigned' }}
+                  </span>
+
+                  <select *ngIf="editingItemId === item.item_id" [(ngModel)]="editItemData.category_id"
+                    class="form-select form-select-sm">
+                    <option [ngValue]="null">-- Unassigned --</option>
+                    <option *ngFor="let cat of categories" [ngValue]="cat.category_id">
+                      {{ cat.category_name }}
+                    </option>
+                  </select>
+                </td>
+
+                <td>
+                  <span *ngIf="editingItemId !== item.item_id"
+                    [class]="item.quantity > 0 ? 'badge bg-success' : 'badge bg-danger'">
+                    {{ item.quantity }}
+                  </span>
+                  <input *ngIf="editingItemId === item.item_id" type="number" [(ngModel)]="editItemData.quantity"
+                    class="form-control form-control-sm" style="max-width: 90px;">
+                </td>
+
+                <td class="text-end">
+                  <ng-container *ngIf="editingItemId !== item.item_id">
+                    <button class="btn btn-outline-warning btn-sm me-1" (click)="startEditItem(item)">
+                      <i class="bi bi-pencil-fill"></i>
+                    </button>
+                    <button class="btn btn-outline-danger btn-sm" (click)="deleteItem(item.item_id)">
+                      <i class="bi bi-trash3-fill"></i>
+                    </button>
+                  </ng-container>
+
+                  <ng-container *ngIf="editingItemId === item.item_id">
+                    <button class="btn btn-success btn-sm me-1" (click)="saveItemUpdate(item.item_id)">
+                      <i class="bi bi-save-fill"></i>
+                    </button>
+                    <button class="btn btn-secondary btn-sm" (click)="editingItemId = null">
+                      <i class="bi bi-x-circle-fill"></i>
+                    </button>
+                  </ng-container>
+                </td>
+
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="showRegisterModal" class="modal fade show d-block animate fadeIn" tabindex="-1"
+  style="background: rgba(0,0,0,0.55); backdrop-filter: blur(3px);">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-info shadow-lg">
+
+      <div class="modal-header bg-info text-dark">
+        <h5 class="modal-title fw-bold"><i class="bi bi-shield-lock-fill me-2"></i>Provision User Profile</h5>
+        <button type="button" class="btn-close" (click)="closeRegisterModal()"></button>
+      </div>
+
+      <form (ngSubmit)="registerNewUser()">
+        <div class="modal-body">
+
+          <div *ngIf="registrationMessage" [class]="registrationSuccess ? 'alert alert-success' : 'alert alert-danger'"
+            class="alert py-2 small">
+            {{ registrationMessage }}
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label small fw-bold text-muted mb-1">System Account Username</label>
+            <div class="input-group input-group-sm">
+              <span class="input-group-text"><i class="bi bi-person-badge"></i></span>
+              <input type="text" [(ngModel)]="newUser.username" name="regUsername" class="form-control"
+                placeholder="e.g., floor_manager_dan" required autocomplete="off">
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label small fw-bold text-muted mb-1">Account Password Access Code</label>
+            <div class="input-group input-group-sm">
+              <span class="input-group-text"><i class="bi bi-key-fill"></i></span>
+              <input type="password" [(ngModel)]="newUser.password" name="regPassword" class="form-control"
+                placeholder="••••••••" required>
+            </div>
+          </div>
+
+          <div class="mb-2">
+            <label class="form-label small fw-bold text-muted mb-1">System System Authorization Role Group</label>
+            <select [(ngModel)]="newUser.role" name="regRole" class="form-select form-select-sm">
+              <option value="user">Standard Inventory Operator (User)</option>
+              <option value="admin">System Administrator (Admin)</option>
+            </select>
+          </div>
+
+        </div>
+
+        <div class="modal-footer bg-light py-2">
+          <button type="button" class="btn btn-secondary btn-sm fw-bold" (click)="closeRegisterModal()">Cancel</button>
+          <button type="submit" class="btn btn-info btn-sm text-dark fw-bold px-3">
+            <i class="bi bi-cloud-arrow-up-fill me-1"></i> Save Account
+          </button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>
