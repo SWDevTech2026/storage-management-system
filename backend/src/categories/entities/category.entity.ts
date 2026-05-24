@@ -3,6 +3,7 @@ import { Item } from '../../items/entities/item.entity';
 
 /**
  * @class Category
+ * @author [Longolol Emuria Mohamud]
  * @description Represents a product grouping category within the storage management system.
  */
 @Entity('categories')
