@@ -5,6 +5,7 @@ import { Category } from './entities/category.entity';
 
 /**
  * @class CategoriesService
+ * @author [LONGOLOL EMURIA MOHAMUD]
  * @description Provides the data access and business layer logic for system storage categories.
  */
 @Injectable()
@@ -20,7 +21,7 @@ export class CategoriesService {
 
   /**
    * @method create
-   * @description Inserts a brand new category definition entry into the tracking storage engine.
+   * @description Inserts a brand new category definition entry into the database tracking engine.
    * @param {Partial<Category>} categoryData Properties used to build the new category structure.
    * @returns {Promise<Category>} The saved database entity instance.
    */
@@ -46,13 +47,9 @@ export class CategoriesService {
    * @throws {NotFoundException} If no record matches the target parameter.
    */
   async findOne(id: number): Promise<Category> {
-    const category = await this.categoryRepository.findOne({
-      where: { category_id: id },
-    });
+    const category = await this.categoryRepository.findOne({ where: { category_id: id } });
     if (!category) {
-      throw new NotFoundException(
-        `Category matching ID ${id} was not located.`,
-      );
+      throw new NotFoundException(`Category matching ID ${id} was not located.`);
     }
     return category;
   }
