@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dbmodel pgmodeler-version="0.9.4" last-position="0,0" last-zoom="1" max-obj-count="4"
+	 poweruser="false"
+	 local-models-db="false"
+	 table-space="">
+<database name="storage_management_db" is-template="false" allow-conns="true">
+</database>
+
+<schema name="public" layers="0" fill-color="#e1e1e1" sql-disabled="true">
+</schema>
+
+<table name="users" layers="0" collapse-mode="2" max-obj-count="7" z-value="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="160" y="140"/>
+	<column name="user_id" not-null="true" sequence="public.users_user_id_seq">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="username" not-null="true">
+		<type name="varchar" length="50"/>
+	</column>
+	<column name="email">
+		<type name="varchar" length="100"/>
+	</column>
+	<column name="password" not-null="true">
+		<type name="varchar" length="255"/>
+	</column>
+	<column name="role" default-value="'user'">
+		<type name="varchar" length="50"/>
+	</column>
+	<column name="created_at" default-value="CURRENT_TIMESTAMP">
+		<type name="timestamp" length="0"/>
+	</column>
+	<constraint name="users_pk" type="pk-constraint" factor="10">
+		<columns names="user_id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="users_username_uq" type="uq-constraint" factor="10">
+		<columns names="username" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="users_email_uq" type="uq-constraint" factor="10">
+		<columns names="email" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<sequence name="users_user_id_seq" cycle="false" start="1" increment="1" min-value="1" max-value="2147483647" cache="1">
+	<schema name="public"/>
+	<role name="postgres"/>
+</sequence>
+
+<table name="categories" layers="0" collapse-mode="2" max-obj-count="2" z-value="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="640" y="440"/>
+	<column name="category_id" not-null="true" sequence="public.categories_category_id_seq">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="category_name" not-null="true">
+		<type name="varchar" length="100"/>
+	</column>
+	<constraint name="categories_pk" type="pk-constraint" factor="10">
+		<columns names="category_id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<sequence name="categories_category_id_seq" cycle="false" start="1" increment="1" min-value="1" max-value="2147483647" cache="1">
+	<schema name="public"/>
+	<role name="postgres"/>
+</sequence>
+
+<table name="items" layers="0" collapse-mode="2" max-obj-count="8" z-value="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="620" y="100"/>
+	<column name="item_id" not-null="true" sequence="public.items_item_id_seq">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="item_name" not-null="true">
+		<type name="varchar" length="100"/>
+	</column>
+	<column name="category_id">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="quantity" default-value="0">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="price">
+		<type name="decimal" length="10" precision="2"/>
+	</column>
+	<column name="created_by">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="created_at" default-value="CURRENT_TIMESTAMP">
+		<type name="timestamp" length="0"/>
+	</column>
+	<constraint name="items_pk" type="pk-constraint" factor="10">
+		<columns names="item_id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<sequence name="items_item_id_seq" cycle="false" start="1" increment="1" min-value="1" max-value="2147483647" cache="1">
+	<schema name="public"/>
+	<role name="postgres"/>
+</sequence>
+
+<constraint name="fk_category" type="fk-constraint" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="SET NULL" ref-table="public.categories" table="public.items">
+	<columns names="category_id" ref-type="src-columns"/>
+	<ref-columns names="category_id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="fk_created_by" type="fk-constraint" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="SET NULL" ref-table="public.users" table="public.items">
+	<columns names="created_by" ref-type="src-columns"/>
+	<ref-columns names="user_id" ref-type="dst-columns"/>
+</constraint>
+
+<relationship name="rel_items_categories" type="relfk" layer="0"
+	 src-table="public.items" dst-table="public.categories" trigger-to-skip="false"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_items_users" type="relfk" layer="0"
+	 src-table="public.items" dst-table="public.users" trigger-to-skip="false"
+	 src-required="false" dst-required="false"/>
+
+</dbmodel>
